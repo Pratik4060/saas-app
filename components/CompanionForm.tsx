@@ -6,6 +6,8 @@ import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { subjects } from "@/constants"
 import { Textarea } from "@/components/ui/textarea"
+import { createCompanion } from "@/lib/actions/companion.action"
+import { redirect } from "next/navigation"
 import {
   Form,
   FormControl,
@@ -43,8 +45,15 @@ const CompanionForm = () => {
     },
   })
 
-  const onSubmit = (value: z.infer<typeof formSchema>) => {
-       console.log(value)
+  const onSubmit = async (value: z.infer<typeof formSchema>) => {
+       const companion = await createCompanion(value);
+       if(companion){
+        redirect(`/Companions/${companion.id}`);
+       }else{
+        console.log("Failed to create companion");
+        redirect('/')
+       }
+
   }
   return (
 <Form {...form}>
